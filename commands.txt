@@ -1,0 +1,3 @@
+python "C:\Program Files (x86)\Eclipse\Sumo\tools\randomTrips.py" -n vierkant.net.xml -e 50
+randomTrips.py" -n vierkant.net.xml -r vierkant.rou.xml --remove-loops
+python "C:\Program Files (x86)\Eclipse\Sumo\tools\randomTrips.py" -n justin_backwards.net.xml -r justin_backwards.rou.xml -p 4 --remove-loops --end 10000
