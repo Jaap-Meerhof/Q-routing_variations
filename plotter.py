@@ -27,7 +27,7 @@ class Plotter:
         ax.set_title(title)
         # z = np.polyfit(plot_x_steps, plot_y_route_length, 1)
         # p = np.poly1d(z)
-        # ax.set_yscale("log")
+        #ax.set_yscale("log")
 
         newlist = self.weightedAverage(json_object[param], 1)
         ax.plot(plot_x_steps, newlist, color="red")  # , marker="o"
@@ -50,11 +50,12 @@ class Plotter:
                     dpi=100,
                     bbox_inches='tight')
 
-    def getmultiplegraphs(self, path_to_save, param, yname, N, markerinterval):
+    def getmultiplegraphs(self, jsonpath, path_to_save, param, title, yname, N, markerinterval):
 
-        path_list = [f for f in listdir("json") if isfile(join("json", f))]
+        path_without_slash = jsonpath.replace('/', '')
+        path_list = [f for f in listdir(path_without_slash) if isfile(join(path_without_slash, f))]
         for i, path in enumerate(path_list):
-            path_list[i] = "json/" + path
+            path_list[i] = jsonpath + path
 
         json_objects = list()
         colorlist = [ "darkred", "darkkhaki", "red", "b", "g", "orange", "magenta", "black", "lime"]
@@ -65,7 +66,8 @@ class Plotter:
         x = json_objects[0]["steps"]
 
         fig, ax = plt.subplots()
-        ax.set_title(yname)
+        ax.set_title(title)
+        #ax.set_yscale("log")
         for i, json_object in enumerate(json_objects):
             name = self.getName(path_list[i])
             if N == 1:
@@ -76,11 +78,11 @@ class Plotter:
             #newlist = self.weightedAverage(json_object[param], 1)
             print("last average of " + name + "is: " + str(newlist[-1]))
             ax.plot(x, newlist, color=colorlist[i],
-                    label=name, marker=markerlist[i],
+                    label=name, marker=markerlist[i], linewidth=1,
                     markevery= [r.randint(markerinterval[0], markerinterval[1])], markersize=8)  # , marker="o" 20000, 30000  80000, 120000
         ax.legend(loc='best')
         ax.set_xlabel("Simulation Steps")
-        #ax.set_ylabel(yname, color="black")
+        ax.set_ylabel(yname, color="black")
         #ax.grid()
 
         plt.show()
@@ -147,8 +149,15 @@ if __name__ == '__main__':
 
     #p.getSingleGraph(p.find("standard"),
     #                       "Arrived Vehicles", "plots/final_standard_arrived.jpeg", param="arrived_vehicles", paramtitle="Arrived Vehicles")
-    #p.getmultiplegraphs("plots/final_all_new.jpeg", param="new_route_lengths", yname="Weighted Average Vehicle Route Lenght In Roads Taken", N=20000, markerinterval=[20000, 30000])
-    p.getmultiplegraphs("plots/final_all_loops_jap.jpeg", param="loops_made", yname="Loops Made", N=1, markerinterval=[80000, 120000])
+    #p.getmultiplegraphs("json/", "plots/final_all_new_2.jpeg", param="new_route_lengths",
+    #                     title="Simple Moving Average Vehicle Route Lenght In Roads Taken Over Time", yname="Simple Moving Average Vehicle Route Length", N=20000, markerinterval=[20000, 30000])
+    # p.getmultiplegraphs("json/", "plots/final_all_loops.jpeg", param="loops_made", title="Loops Made Over Time", yname="Loops Made", N=1, markerinterval=[80000, 120000])
+
     #p.getmultiplegraphs([p.find("standard")], "Vehicles Arrived", "plots/final_all_vehicles.jpeg", param="arrived_vehicles", yname="Arrived Vehicles", N=1)
-    p.getmultiplegraphs("plots/final_all_jap.jpeg", param="route_length", yname="Average Vehicle Route Length In Roads Taken", N=1, markerinterval=[20000, 30000])
+
+    p.getmultiplegraphs("json/", "plots/final_all_2.jpeg", param="route_length", title="Average Vehicle Route Length In Roads Taken Over Time", yname="Average Vehicle Route Lenght",  N=1, markerinterval=[20000, 30000])
+
+    #p.getmultiplegraphs("jsonNLearning/", "plots/final_all_NLearning.jpeg", param="route_length", yname="Average Vehicle Route Length In Roads Taken", N=1, markerinterval=[20000, 30000])
+    #p.getmultiplegraphs("jsonNLearning/", "plots/final_all_new.jpeg", param="new_route_lengths", yname="Weighted Average Vehicle Route Lenght In Roads Taken", N=20000, markerinterval=[20000, 30000])
+
     pass

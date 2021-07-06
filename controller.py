@@ -23,7 +23,7 @@ else:
 
 sumoBinary = checkBinary('sumo-gui') #-gui
 net = "justin_backwards"
-jsonextra = "_jaap_dual_negative"
+jsonextra = "_DRQ-R_2"
 sumoCmd = [sumoBinary, "-c", "networks/" + net + "/" + net + ".sumocfg"]
 SUMO_ROADNET_PATH = "networks/" + net + "/" + net + ".net.xml"
 
@@ -186,8 +186,9 @@ class Controller:
                     fromNode_id = edge.getFromNode().getID()
                     route_so_far = vehicle_routes[vehicle_id]
                     junctions[fromNode_id].updateQTable(y, edge, toNode_id, route_so_far)
-                    if DEEP:
-                        junctions[toNode_id].updateQTable(y, otheredge, fromNode_id, route_so_far) # REMOVE
+                    if DEEP: # fromNode_id should be start of road taken
+                        start = self.road_net.getEdge(route_so_far[0]).getFromNode().getID()
+                        junctions[toNode_id].updateQTable(y, otheredge, start, route_so_far) # REMOVE
 
                     plot_y_min_route.append(plot_vehicle_min_route[vehicle_id])
                     plot_vehicle_min_route.pop(vehicle_id)
@@ -256,8 +257,9 @@ class Controller:
                     # did i make a loop?
 
                     from_Node.updateQTable(travel_time, traveled_edge, dest_junction_id, route_so_far)
-                    if DEEP:
-                        to_Node.updateQTable(travel_time, other_edge, dest_junction_id, route_so_far)
+                    if DEEP: # dest_junction_id should be start
+                        start = self.road_net.getEdge(route_so_far[0]).getFromNode().getID()
+                        to_Node.updateQTable(travel_time, other_edge, start, route_so_far)
 
                     travel_times[vehicle_id] = traci.simulation.getTime()
 

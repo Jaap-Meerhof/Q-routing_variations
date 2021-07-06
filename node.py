@@ -5,7 +5,7 @@ import random
 
 SUMO_ROADNET_PATH = "net.net.xml"
 ETA = 0.5
-JAAP = False
+N_learning = False
 
 
 class Node:
@@ -25,7 +25,7 @@ class Node:
     def getID(self):
         return self.id
 
-    def __init__(self, id, junctions, road_net, loop=False, negative=True,  new_negative=False):
+    def __init__(self, id, junctions, road_net, loop=False, negative=False,  new_negative=False):
         self.id = id
         self.road_net = road_net
         self.junctions = junctions
@@ -56,7 +56,7 @@ class Node:
         node_end_road = self.junctions[taken_edge.getToNode().getID()]
 
         old = self.qTable[taken_edge.getID()][destination_id]
-        if JAAP:
+        if not N_learning:
             if node_end_road.getID() == destination_id:
                 t = 0
             else:
